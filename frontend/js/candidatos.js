@@ -142,12 +142,14 @@
   const aprovadosValueEl = document.getElementById('aprovados-value');
   const pendentesValueEl = document.getElementById('pendentes-value');
   const reprovadosValueEl = document.getElementById('reprovados-value');
+  const contratadosValueEl = document.getElementById('contratados-value');
 
   function atualizarIndicadores(lista) {
     totalValueEl.textContent = lista.length;
-    aprovadosValueEl.textContent = lista.filter(c => c.status === 'approved' || c.status === 'hired').length;
+    aprovadosValueEl.textContent = lista.filter(c => c.status === 'approved').length;
     pendentesValueEl.textContent = lista.filter(c => c.status === 'pending').length;
     reprovadosValueEl.textContent = lista.filter(c => c.status === 'rejected').length;
+    contratadosValueEl.textContent = lista.filter(c => c.status === 'hired').length;
 
     const contagemPorDepto = {};
     lista.forEach(c => {
@@ -263,6 +265,26 @@
     });
   }
 
+    async function alterarStatus(id, novoStatusUi) {
+    try {
+      const resposta = await fetch(`${API_URL}/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: statusUiParaApi[novoStatusUi] })
+      });
+      if (!resposta.ok) throw new Error('Erro ao atualizar status');
+
+      const candidato = candidates.find(c => c.id === id);
+      if (candidato) candidato.status = novoStatusUi;
+      atualizarIndicadores(candidates);
+      renderTable();
+    } catch (erro) {
+      console.error(erro);
+      alert('Não foi possível atualizar o status.');
+      renderTable();
+    }
+  }
+
   function renderTable(){
     const filtered = candidates.filter(matchesFilters);
     const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -280,7 +302,14 @@
         <td>${c.departamento}</td>
         <td>${formatSalario(c.salario)}</td>
         <td>${c.cidade}</td>
-        <td class="col-status"><span class="status-pill ${c.status}">${statusLabels[c.status]}</span></td>
+        <td class="col-status">
+          <select class="status-pill status-select ${c.status}" data-id="${c.id}">
+            <option value="pending" ${c.status === 'pending' ? 'selected' : ''}>Em análise</option>
+            <option value="approved" ${c.status === 'approved' ? 'selected' : ''}>Aprovado</option>
+            <option value="rejected" ${c.status === 'rejected' ? 'selected' : ''}>Reprovado</option>
+            <option value="hired" ${c.status === 'hired' ? 'selected' : ''}>Contratado</option>
+          </select>
+        </td>
         <td class="col-actions">
           <div class="action-buttons">
             <button class="action-btn edit" type="button" data-id="${c.id}" title="Editar">
@@ -300,6 +329,10 @@
 
     tbody.querySelectorAll('.action-btn.edit').forEach(btn => {
       btn.addEventListener('click', () => openEditModal(Number(btn.dataset.id)));
+    });
+
+    tbody.querySelectorAll('.status-select').forEach(select => {
+      select.addEventListener('change', () => alterarStatus(Number(select.dataset.id), select.value));
     });
 
     renderPagination(filtered.length);
