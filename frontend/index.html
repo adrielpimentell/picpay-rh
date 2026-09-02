@@ -1,13 +1,50 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PicPay | RH - Acesse sua conta</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="assets/picpay-logo.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="page">
+  <div class="hero" role="img" aria-label="Sua vida com mais pique. PicPay"></div>
+
+  <div class="form-side">
+    <div class="form-wrap">
+      <h2>Acesse sua conta</h2>
+      <p class="subtitle">Preencha seus dados para continuar</p>
+
+      <form id="login-form" novalidate>
+        <div class="field" id="email-field">
+          <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="email" required>
+          <p class="error-message" id="email-error">E-mail inválido. Verifique se contém um @ e um domínio válido.</p>
+        </div>
+
+        <div class="field password-field" id="password-field">
+          <input type="password" id="password" name="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+          <button type="button" class="toggle-password" id="toggle-password" aria-label="Mostrar senha" aria-pressed="false">
+            <svg class="eye" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+            <svg class="eye-off" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a19.6 19.6 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 7 11 7a19.5 19.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <p class="error-message" id="password-error">Senha inválida. Use ao menos 1 letra maiúscula, 1 minúscula, 1 número, 1 caractere especial e 8 caracteres.</p>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn" disabled>Entrar</button>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+<script src="js/script.js"></script>
 </html>
