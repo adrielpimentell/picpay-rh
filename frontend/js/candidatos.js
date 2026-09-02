@@ -204,7 +204,7 @@
       if (c.salario < min || c.salario > max) return false;
     }
     const term = searchInput.value.trim().toLowerCase();
-    if (term && !c.nome.toLowerCase().includes(term) && !c.email.toLowerCase().includes(term)) return false;
+    if (term && !c.nome.toLowerCase().includes(term) && !c.email.toLowerCase().includes(term) && !c.cargo.toLowerCase().includes(term)) return false;
     return true;
   }
 
