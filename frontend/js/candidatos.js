@@ -1,4 +1,19 @@
-  // ---------- Dropdown: Candidatos por departamento (card) ----------
+  // Tradução entre os valores da API (backend) e os valores usados na interface
+  const statusApiParaUi = {
+    EM_ANALISE: 'pending',
+    APROVADO: 'approved',
+    REPROVADO: 'rejected',
+    CONTRATADO: 'hired'
+  };
+
+  const statusUiParaApi = {
+    pending: 'EM_ANALISE',
+    approved: 'APROVADO',
+    rejected: 'REPROVADO',
+    hired: 'CONTRATADO'
+  };
+ 
+ // ---------- Dropdown: Candidatos por departamento (card) ----------
   const deptDropdown = document.getElementById('dept-dropdown');
   const deptBtn = document.getElementById('dept-dropdown-btn');
   const deptMenu = document.getElementById('dept-menu');
@@ -93,42 +108,39 @@
   }, true);
 
   // ---------- Dados dos candidatos ----------
-  let candidates = [
-    { id: 1, nome: 'Roberto Dantas', email: 'roberto.dantas@outlook.com', telefone: '(11) 95678-9877', cargo: 'Faxineiro', departamento: 'Limpeza e Zelo', salario: 2000, cidade: 'Limeira-SP', status: 'approved' },
-    { id: 2, nome: 'Camila Ferreira', email: 'camila.ferreira@gmail.com', telefone: '(11) 98123-4567', cargo: 'Analista de RH', departamento: 'Recursos Humanos', salario: 4200, cidade: 'São Paulo-SP', status: 'pending' },
-    { id: 3, nome: 'Lucas Almeida', email: 'lucas.almeida@hotmail.com', telefone: '(21) 99876-5432', cargo: 'Desenvolvedor Front-end', departamento: 'Transformação Digital', salario: 7500, cidade: 'Rio de Janeiro-RJ', status: 'rejected' },
-    { id: 4, nome: 'Bianca Souza', email: 'bianca.souza@outlook.com', telefone: '(31) 97654-3210', cargo: 'Analista Financeiro', departamento: 'Financeiro', salario: 5100, cidade: 'Belo Horizonte-MG', status: 'approved' },
-    { id: 5, nome: 'Thiago Martins', email: 'thiago.martins@gmail.com', telefone: '(41) 96543-2198', cargo: 'Consultor Comercial', departamento: 'Comercial', salario: 3800, cidade: 'Curitiba-PR', status: 'approved' }
-  ];
-  let nextId = 6;
+    // ---------- Dados dos candidatos (via API) ----------
+  const API_URL = 'http://localhost:8080/funcionarios';
+  let candidates = [];
 
-  // Candidatos extras de exemplo, so pra demonstrar a paginacao funcionando com uma base maior
-  (function gerarCandidatosDemo(){
-    const nomes = ['Ana', 'Bruno', 'Carla', 'Diego', 'Elaine', 'Fabio', 'Gisele', 'Hugo', 'Isabela', 'Joao', 'Karina', 'Leonardo', 'Marina', 'Nicolas', 'Otavio', 'Patricia', 'Rafael', 'Sabrina', 'Tomas', 'Vanessa'];
-    const sobrenomes = ['Silva', 'Souza', 'Oliveira', 'Costa', 'Pereira', 'Rodrigues', 'Almeida', 'Nascimento', 'Lima', 'Araujo'];
-    const cargos = ['Analista de RH', 'Desenvolvedor Front-end', 'Consultor Comercial', 'Analista Financeiro', 'Faxineiro', 'Assistente Administrativo', 'Designer UX/UI'];
-    const departamentos = ['Limpeza e Zelo', 'Recursos Humanos', 'Transformação Digital', 'Financeiro', 'Comercial'];
-    const cidades = ['São Paulo-SP', 'Rio de Janeiro-RJ', 'Belo Horizonte-MG', 'Curitiba-PR', 'Limeira-SP', 'Campinas-SP', 'Porto Alegre-RS'];
-    const statusList = ['approved', 'pending', 'rejected'];
+  function converterDaApi(funcionario) {
+    return {
+      id: funcionario.id,
+      nome: funcionario.nome,
+      email: funcionario.email,
+      telefone: funcionario.telefone,
+      cargo: funcionario.cargo,
+      departamento: funcionario.departamento,
+      salario: funcionario.salario,
+      cidade: funcionario.cidade,
+      status: statusApiParaUi[funcionario.status] || 'pending'
+    };
+  }
 
-    for (let i = 0; i < 65; i++){
-      const nome = nomes[i % nomes.length] + ' ' + sobrenomes[(i * 3) % sobrenomes.length];
-      candidates.push({
-        id: nextId++,
-        nome,
-        email: nome.toLowerCase().replace(/\s+/g, '.') + '@email.com',
-        telefone: '(11) 9' + (1000 + i) + '-' + (2000 + i),
-        cargo: cargos[i % cargos.length],
-        departamento: departamentos[i % departamentos.length],
-        salario: 1500 + (i % 10) * 700,
-        cidade: cidades[i % cidades.length],
-        status: statusList[i % statusList.length]
-      });
+  async function carregarCandidatos() {
+    try {
+      const resposta = await fetch(API_URL);
+      if (!resposta.ok) throw new Error('Erro ao buscar funcionários');
+      const dados = await resposta.json();
+      candidates = dados.map(converterDaApi);
+      renderTable();
+    } catch (erro) {
+      console.error(erro);
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--subtitle); padding: 40px;">Não foi possível carregar os candidatos. Verifique se o backend está rodando.</td></tr>`;
     }
-  })();
+  }
 
-  const statusLabels = { approved: 'Aprovado', pending: 'Em análise', rejected: 'Reprovado' };
-  const statusToFilterLabel = { approved: 'Aprovado', pending: 'Em análise', rejected: 'Reprovado' };
+  const statusLabels = { approved: 'Aprovado', pending: 'Em análise', rejected: 'Reprovado', hired: 'Contratado' };
+  const statusToFilterLabel = { approved: 'Aprovado', pending: 'Em análise', rejected: 'Reprovado', hired: 'Contratado' };
 
   function formatSalario(valor){
     return 'R$' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
@@ -282,10 +294,17 @@
     if (e.target === deleteModalOverlay) closeDeleteModal();
   });
 
-  confirmDeleteBtn.addEventListener('click', () => {
+  confirmDeleteBtn.addEventListener('click', async () => {
     if (candidateIdToDelete !== null) {
-      candidates = candidates.filter(c => c.id !== candidateIdToDelete);
-      renderTable();
+      try {
+        const resposta = await fetch(`${API_URL}/${candidateIdToDelete}`, { method: 'DELETE' });
+        if (!resposta.ok) throw new Error('Erro ao excluir');
+        candidates = candidates.filter(c => c.id !== candidateIdToDelete);
+        renderTable();
+      } catch (erro) {
+        console.error(erro);
+        alert('Não foi possível excluir o candidato.');
+      }
     }
     closeDeleteModal();
   });
@@ -340,12 +359,14 @@
     if (e.target === addModalOverlay) closeAddModal();
   });
 
-  addForm.addEventListener('submit', (e) => {
+    addForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const salarioRaw = document.getElementById('add-salario').value
       .replace(/[^\d,]/g, '')
       .replace(',', '.');
-    const novoCandidato = {
+
+    const statusUi = document.getElementById('add-status').value;
+    const payload = {
       nome: document.getElementById('add-nome').value.trim(),
       email: document.getElementById('add-email').value.trim(),
       telefone: document.getElementById('add-telefone').value.trim(),
@@ -353,20 +374,34 @@
       departamento: document.getElementById('add-departamento').value,
       salario: parseFloat(salarioRaw) || 0,
       cidade: document.getElementById('add-cidade').value.trim(),
-      status: document.getElementById('add-status').value
+      status: statusUiParaApi[statusUi] || 'EM_ANALISE'
     };
 
-    if (editingId !== null) {
-      const idx = candidates.findIndex(c => c.id === editingId);
-      if (idx !== -1) candidates[idx] = { ...candidates[idx], ...novoCandidato };
-    } else {
-      candidates.push({ id: nextId++, ...novoCandidato });
-      currentPage = Math.ceil(candidates.filter(matchesFilters).length / pageSize);
-    }
+    try {
+      let resposta;
+      if (editingId !== null) {
+        resposta = await fetch(`${API_URL}/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        resposta = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
 
-    renderTable();
-    closeAddModal();
+      if (!resposta.ok) throw new Error('Erro ao salvar candidato');
+
+      await carregarCandidatos();
+      closeAddModal();
+    } catch (erro) {
+      console.error(erro);
+      alert('Não foi possível salvar o candidato.');
+    }
   });
 
   // ---------- Init ----------
-  renderTable();
+  carregarCandidatos();

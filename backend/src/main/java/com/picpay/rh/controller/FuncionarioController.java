@@ -49,7 +49,7 @@ public class FuncionarioController {
                         .body("Funcionário com id " + id + " não encontrado."));
     }
 
-    @PatchMapping("/{id}")
+        @PatchMapping("/{id}")
     public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Funcionario dados) {
         return service.atualizarParcial(id, dados)
                 .<ResponseEntity<?>>map(ResponseEntity::ok)
