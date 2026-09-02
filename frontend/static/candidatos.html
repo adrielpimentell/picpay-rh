@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PicPay RH - Candidatos</title>
+<link rel="icon" href="assets/picpay-logo.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+<style>
+  :root{
+    --green: #00BC54;
+    --green-dark: #00A248;
+    --table-header: #33C976;
+    --row-alt: #EBFAF2;
+    --ink: #121212;
+    --subtitle: #6B6B6B;
+    --border: #E5E5E5;
+    --section-bg: #F3F3F3;
+    --status-approved-bg: #7ADCA6;
+    --status-approved-text: #0B4D28;
+    --status-pending-bg: #FFF6A4;
+    --status-pending-text: #6B5F00;
+    --status-rejected-bg: #FFA4A4;
+    --status-rejected-text: #7A1414;
+    --danger: #E5484D;
+    --danger-dark: #C43539;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin: 0;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-left{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-left img{
+    width: 252px;
+    max-width: 100%;
+    height: 55px;
+    display: block;
+    object-fit: contain;
+  }
+
+  .header-right-group{
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-tabs{
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-tab{
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--subtitle);
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+  }
+
+  .nav-tab.active{
+    color: var(--ink);
+  }
+
+  .nav-tab.active::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -14px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 999px;
+  }
+
+  .logout-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 203px;
+    height: 49px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .logout-btn:hover{
+    background: #f5f5f5;
+  }
+
+  /* MAIN CONTENT */
+  .content{
+    padding: 40px 48px 0;
+  }
+
+  .welcome h1{
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0 0 8px;
+  }
+
+  .welcome p{
+    font-size: 16px;
+    color: var(--subtitle);
+    font-weight: 600;
+    margin: 0 0 28px;
+  }
+
+  .summary-row{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 24px;
+    margin-bottom: 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .summary-card{
+    width: 330px;
+    height: 200px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    flex-shrink: 0;
+  }
+
+  .card-label{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .card-label iconify-icon{
+    font-size: 36px;
+    flex-shrink: 0;
+  }
+
+  .card-value{
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .dept-dropdown{
+    position: relative;
+    width: fit-content;
+    margin-top: auto;
+  }
+
+  .dept-dropdown-btn{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: none;
+    background: var(--green);
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .dept-dropdown-btn iconify-icon{
+    font-size: 16px;
+    transition: transform 0.15s ease;
+  }
+
+  .dept-dropdown.open .dept-dropdown-btn iconify-icon{
+    transform: rotate(180deg);
+  }
+
+  .dept-menu{
+    display: none;
+    position: fixed;
+    min-width: 220px;
+    max-width: 240px;
+    width: max-content;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+    z-index: 999;
+  }
+
+  .dept-dropdown.open .dept-menu{
+    display: block;
+  }
+
+  .dept-option{
+    width: 100%;
+    text-align: left;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .dept-option:hover{
+    background: var(--row-alt);
+  }
+
+  /* TOOLBAR SECTION */
+  .table-section{
+    background: var(--section-bg);
+    padding: 32px 48px 60px;
+  }
+
+  .toolbar{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .add-btn{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 24px;
+    border: none;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .add-btn:hover{
+    opacity: 0.88;
+  }
+
+  .add-btn iconify-icon{
+    font-size: 18px;
+  }
+
+  .filters{
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .filter-group{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filter-label{
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .filter-select-btn{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 190px;
+    padding: 13px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .filter-select-btn iconify-icon{
+    font-size: 16px;
+    color: var(--subtitle);
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .filter-dropdown.open .filter-select-btn iconify-icon{
+    transform: rotate(180deg);
+  }
+
+  .filter-dropdown{
+    position: relative;
+  }
+
+  .filter-menu{
+    display: none;
+    position: fixed;
+    min-width: 220px;
+    max-width: 240px;
+    width: max-content;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+    z-index: 999;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+
+  .filter-dropdown.open .filter-menu{
+    display: block;
+  }
+
+  .filter-option{
+    width: 100%;
+    text-align: left;
+    padding: 12px 18px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .filter-option:hover{
+    background: var(--row-alt);
+  }
+
+  .filter-option.active{
+    color: var(--green-dark);
+  }
+
+  .search-box{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 260px;
+    padding: 13px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+  }
+
+  .search-box iconify-icon{
+    font-size: 18px;
+    color: var(--subtitle);
+    flex-shrink: 0;
+  }
+
+  .search-box input{
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    width: 100%;
+    background: transparent;
+  }
+
+  .search-box input::placeholder{
+    color: var(--subtitle);
+    font-weight: 600;
+  }
+
+  .table-wrap{
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-wrap::-webkit-scrollbar{
+    height: 10px;
+  }
+
+  .table-wrap::-webkit-scrollbar-track{
+    background: var(--row-alt);
+  }
+
+  .table-wrap::-webkit-scrollbar-thumb{
+    background: var(--green);
+    border-radius: 999px;
+  }
+
+  .table-wrap::-webkit-scrollbar-thumb:hover{
+    background: var(--green-dark);
+  }
+
+  .table-wrap{
+    scrollbar-width: 28px;
+    scrollbar-color: var(--ink) var(--row-alt);
+  }
+
+  table{
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+  }
+
+  thead tr{
+    background: var(--table-header);
+  }
+
+  thead th{
+    text-align: left;
+    padding: 20px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  tbody td{
+    padding: 22px 24px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  tbody tr:nth-child(even){
+    background: var(--row-alt);
+  }
+
+  th.col-status, td.col-status,
+  th.col-actions, td.col-actions{
+    text-align: center;
+  }
+
+  .status-pill{
+    display: inline-block;
+    min-width: 104px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .status-pill.approved{
+    background: var(--status-approved-bg);
+    color: var(--status-approved-text);
+  }
+
+  .status-pill.pending{
+    background: var(--status-pending-bg);
+    color: var(--status-pending-text);
+  }
+
+  .status-pill.rejected{
+    background: var(--status-rejected-bg);
+    color: var(--status-rejected-text);
+  }
+
+  .action-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .action-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .action-btn iconify-icon{
+    font-size: 17px;
+  }
+
+  .action-btn.edit iconify-icon{
+    color: var(--ink);
+  }
+
+  .action-btn.edit:hover{
+    background: var(--row-alt);
+    border-color: var(--green);
+  }
+
+  .action-btn.delete iconify-icon{
+    color: var(--danger);
+  }
+
+  .action-btn.delete:hover{
+    background: #FFF0F0;
+    border-color: var(--danger);
+  }
+
+  /* PAGINACAO */
+  .pagination-bar{
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+  }
+
+  .pagination-info{
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--subtitle);
+    white-space: nowrap;
+  }
+
+  .pagination-size{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--subtitle);
+    white-space: nowrap;
+  }
+
+  .pagination-size select{
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    background: #fff;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .pagination-controls{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .page-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 8px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .page-btn:hover:not(:disabled):not(.active){
+    background: var(--row-alt);
+    border-color: var(--green);
+  }
+
+  .page-btn.active{
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+
+  .page-btn:disabled{
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .page-btn iconify-icon{
+    font-size: 16px;
+  }
+
+  .page-ellipsis{
+    padding: 0 4px;
+    color: var(--subtitle);
+    font-weight: 700;
+  }
+
+  /* MODAL OVERLAY */
+  .modal-overlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(18,18,18,0.55);
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 24px;
+  }
+
+  .modal-overlay.open{
+    display: flex;
+  }
+
+  .modal-box{
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .modal-icon{
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #FFF0F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+
+  .modal-icon iconify-icon{
+    font-size: 30px;
+    color: var(--danger);
+  }
+
+  .modal-box h3{
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0 0 10px;
+  }
+
+  .modal-box p{
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--subtitle);
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .modal-box strong{
+    color: var(--ink);
+  }
+
+  .modal-actions{
+    display: flex;
+    gap: 14px;
+  }
+
+  .modal-btn{
+    flex: 1;
+    padding: 14px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s ease, background 0.15s ease;
+  }
+
+  .modal-btn.cancel{
+    background: #fff;
+    border: 1.5px solid var(--border);
+    color: var(--ink);
+  }
+
+  .modal-btn.cancel:hover{
+    background: var(--row-alt);
+  }
+
+  .modal-btn.confirm-delete{
+    background: var(--danger);
+    color: #fff;
+  }
+
+  .modal-btn.confirm-delete:hover{
+    background: var(--danger-dark);
+  }
+
+  /* CADASTRO MODAL */
+  .form-modal-box{
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .form-modal-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .form-modal-header h3{
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0;
+  }
+
+  .form-close-btn{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--section-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .form-close-btn iconify-icon{
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  .form-modal-box > p{
+    font-size: 14px;
+    color: var(--subtitle);
+    font-weight: 600;
+    margin: 0 0 24px;
+  }
+
+  .form-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .form-field{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-field.full{
+    grid-column: 1 / -1;
+  }
+
+  .form-field label{
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .form-field input,
+  .form-field select{
+    padding: 13px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    outline: none;
+    background: #fff;
+  }
+
+  .form-field input:focus,
+  .form-field select:focus{
+    border-color: var(--green);
+  }
+
+  .form-field input::placeholder{
+    color: var(--subtitle);
+    font-weight: 600;
+  }
+
+  .form-modal-actions{
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .modal-btn.confirm-save{
+    background: var(--green);
+    color: #fff;
+  }
+
+  .modal-btn.confirm-save:hover{
+    background: var(--green-dark);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 860px){
+    .header{
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 24px;
+    }
+    .header-right-group{
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .content{
+      padding: 32px 24px 0;
+    }
+    .table-section{
+      padding: 28px 24px 48px;
+    }
+    .toolbar{
+      align-items: stretch;
+    }
+    .form-grid{
+      grid-template-columns: 1fr;
+    }
+    .pagination-bar{
+      justify-content: center;
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <img src="data:image/png;base64,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" alt="PicPay RH">
+  </div>
+
+  <div class="header-right-group">
+    <nav class="nav-tabs">
+      <button class="nav-tab" type="button">Visão Geral</button>
+      <button class="nav-tab active" type="button">Candidatos</button>
+    </nav>
+
+    <button class="logout-btn" type="button">
+      <iconify-icon icon="solar:logout-2-bold"></iconify-icon>
+      Sair
+    </button>
+  </div>
+</header>
+
+<main class="content">
+  <div class="welcome">
+    <h1>Candidatos</h1>
+    <p>Visualize e administre seus todos seus candidatos em um só lugar</p>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="card-label">
+        <iconify-icon icon="fa7-solid:people-group"></iconify-icon>
+        Total de candidatos
+      </div>
+      <div class="card-value">343</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-label">
+        <iconify-icon icon="solar:widget-4-bold"></iconify-icon>
+        Candidatos por departamento
+      </div>
+      <div class="card-value" id="dept-card-value">42</div>
+      <div class="dept-dropdown" id="dept-dropdown">
+        <button class="dept-dropdown-btn" type="button" id="dept-dropdown-btn">
+          <span id="dept-selected">Transformação Digital</span>
+          <iconify-icon icon="solar:alt-arrow-down-bold"></iconify-icon>
+        </button>
+        <div class="dept-menu" id="dept-menu">
+          <button class="dept-option" type="button" data-value="Transformação Digital" data-count="42">Transformação Digital</button>
+          <button class="dept-option" type="button" data-value="Limpeza e Zelo" data-count="58">Limpeza e Zelo</button>
+          <button class="dept-option" type="button" data-value="Financeiro" data-count="27">Financeiro</button>
+          <button class="dept-option" type="button" data-value="Recursos Humanos" data-count="15">Recursos Humanos</button>
+          <button class="dept-option" type="button" data-value="Comercial" data-count="63">Comercial</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-label">
+        <iconify-icon icon="akar-icons:circle-check-fill"></iconify-icon>
+        Aprovados
+      </div>
+      <div class="card-value">198</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-label">
+        <iconify-icon icon="mdi:book-clock"></iconify-icon>
+        Em análise
+      </div>
+      <div class="card-value">98</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="card-label">
+        <iconify-icon icon="fluent-mdl2:status-error-full"></iconify-icon>
+        Reprovados
+      </div>
+      <div class="card-value">47</div>
+    </div>
+  </div>
+</main>
+
+<section class="table-section">
+  <div class="toolbar">
+    <button class="add-btn" type="button" id="open-add-modal-btn">
+      <iconify-icon icon="fa7-solid:add"></iconify-icon>
+      Cadastrar candidato
+    </button>
+
+    <div class="filters">
+      <div class="filter-group">
+        <span class="filter-label">Departamento</span>
+        <div class="filter-dropdown" id="filter-dept-dropdown">
+          <button class="filter-select-btn" type="button" id="filter-dept-btn">
+            <span id="filter-dept-selected">Limpeza e Zelo</span>
+            <iconify-icon icon="solar:alt-arrow-down-bold"></iconify-icon>
+          </button>
+          <div class="filter-menu" id="filter-dept-menu">
+            <button class="filter-option active" type="button" data-value="Limpeza e Zelo">Limpeza e Zelo</button>
+            <button class="filter-option" type="button" data-value="Transformação Digital">Transformação Digital</button>
+            <button class="filter-option" type="button" data-value="Financeiro">Financeiro</button>
+            <button class="filter-option" type="button" data-value="Recursos Humanos">Recursos Humanos</button>
+            <button class="filter-option" type="button" data-value="Comercial">Comercial</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Status</span>
+        <div class="filter-dropdown" id="filter-status-dropdown">
+          <button class="filter-select-btn" type="button" id="filter-status-btn">
+            <span id="filter-status-selected">Todos</span>
+            <iconify-icon icon="solar:alt-arrow-down-bold"></iconify-icon>
+          </button>
+          <div class="filter-menu" id="filter-status-menu">
+            <button class="filter-option active" type="button" data-value="Todos">Todos</button>
+            <button class="filter-option" type="button" data-value="Aprovado">Aprovado</button>
+            <button class="filter-option" type="button" data-value="Em análise">Em análise</button>
+            <button class="filter-option" type="button" data-value="Reprovado">Reprovado</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Salário</span>
+        <div class="filter-dropdown" id="filter-salario-dropdown">
+          <button class="filter-select-btn" type="button" id="filter-salario-btn">
+            <span id="filter-salario-selected">Todos</span>
+            <iconify-icon icon="solar:alt-arrow-down-bold"></iconify-icon>
+          </button>
+          <div class="filter-menu" id="filter-salario-menu">
+            <button class="filter-option active" type="button" data-value="Todos">Todos</button>
+            <button class="filter-option" type="button" data-value="0-1000">Até R$1.000</button>
+            <button class="filter-option" type="button" data-value="1000-2000">De R$1.000 a R$2.000</button>
+            <button class="filter-option" type="button" data-value="2000-4000">De R$2.000 a R$4.000</button>
+            <button class="filter-option" type="button" data-value="4000-7000">De R$4.000 a R$7.000</button>
+            <button class="filter-option" type="button" data-value="7000-99999">Acima de R$7.000</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">&nbsp;</span>
+        <div class="search-box">
+          <iconify-icon icon="ant-design:search-outlined"></iconify-icon>
+          <input type="text" id="search-input" placeholder="Pesquise um cliente">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Cargo</th>
+          <th>Departamento</th>
+          <th>Salário</th>
+          <th>Cidade</th>
+          <th class="col-status">Status</th>
+          <th class="col-actions">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="candidates-table-body"></tbody>
+    </table>
+  </div>
+
+  <div class="pagination-bar">
+    <div class="pagination-info" id="pagination-info">Mostrando 0 de 0 candidatos</div>
+
+    <div class="pagination-controls" id="pagination-controls"></div>
+
+    <div class="pagination-size">
+      <span>Itens por página:</span>
+      <select id="page-size-select">
+        <option value="10">10</option>
+        <option value="20" selected>20</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL: CONFIRMAR EXCLUSAO -->
+<div class="modal-overlay" id="delete-modal-overlay">
+  <div class="modal-box">
+    <div class="modal-icon">
+      <iconify-icon icon="solar:trash-bin-trash-bold"></iconify-icon>
+    </div>
+    <h3>Excluir candidato?</h3>
+    <p>Tem certeza que deseja excluir <strong id="delete-candidate-name">este candidato</strong>? Essa ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" type="button" id="cancel-delete-btn">Cancelar</button>
+      <button class="modal-btn confirm-delete" type="button" id="confirm-delete-btn">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CADASTRAR CANDIDATO -->
+<div class="modal-overlay" id="add-modal-overlay">
+  <div class="form-modal-box">
+    <div class="form-modal-header">
+      <h3>Cadastrar candidato</h3>
+      <button class="form-close-btn" type="button" id="close-add-modal-btn">
+        <iconify-icon icon="ci:close-md"></iconify-icon>
+      </button>
+    </div>
+    <p>Preencha os dados abaixo para adicionar um novo candidato</p>
+
+    <form id="add-candidate-form">
+      <div class="form-grid">
+        <div class="form-field full">
+          <label for="add-nome">Nome completo</label>
+          <input type="text" id="add-nome" placeholder="Ex: Roberto Dantas" required>
+        </div>
+
+        <div class="form-field full">
+          <label for="add-email">E-mail</label>
+          <input type="email" id="add-email" placeholder="Ex: roberto.dantas@outlook.com" required>
+        </div>
+
+        <div class="form-field">
+          <label for="add-telefone">Telefone</label>
+          <input type="text" id="add-telefone" placeholder="(11) 95678-9877" required>
+        </div>
+
+        <div class="form-field">
+          <label for="add-cargo">Cargo</label>
+          <input type="text" id="add-cargo" placeholder="Ex: Faxineiro" required>
+        </div>
+
+        <div class="form-field">
+          <label for="add-departamento">Departamento</label>
+          <select id="add-departamento" required>
+            <option value="">Selecione</option>
+            <option value="Limpeza e Zelo">Limpeza e Zelo</option>
+            <option value="Transformação Digital">Transformação Digital</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="Comercial">Comercial</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="add-salario">Salário</label>
+          <input type="text" id="add-salario" placeholder="Ex: R$2.000,00" required>
+        </div>
+
+        <div class="form-field">
+          <label for="add-cidade">Cidade</label>
+          <input type="text" id="add-cidade" placeholder="Ex: Limeira-SP" required>
+        </div>
+
+        <div class="form-field">
+          <label for="add-status">Status</label>
+          <select id="add-status" required>
+            <option value="pending">Em análise</option>
+            <option value="approved">Aprovado</option>
+            <option value="rejected">Reprovado</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-modal-actions">
+        <button class="modal-btn cancel" type="button" id="cancel-add-btn">Cancelar</button>
+        <button class="modal-btn confirm-save" type="submit">Cadastrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ---------- Dropdown: Candidatos por departamento (card) ----------
+  const deptDropdown = document.getElementById('dept-dropdown');
+  const deptBtn = document.getElementById('dept-dropdown-btn');
+  const deptMenu = document.getElementById('dept-menu');
+  const deptSelected = document.getElementById('dept-selected');
+  const deptCardValue = document.getElementById('dept-card-value');
+
+  function positionFixedMenu(triggerEl, menuEl){
+    const rect = triggerEl.getBoundingClientRect();
+    menuEl.style.top = (rect.bottom + 8) + 'px';
+    menuEl.style.left = rect.left + 'px';
+    menuEl.style.minWidth = rect.width + 'px';
+  }
+
+  function closeAllDropdowns(except){
+    document.querySelectorAll('.dept-dropdown.open, .filter-dropdown.open').forEach(el => {
+      if (el !== except) el.classList.remove('open');
+    });
+  }
+
+  deptBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = !deptDropdown.classList.contains('open');
+    closeAllDropdowns(deptDropdown);
+    if (willOpen) positionFixedMenu(deptBtn, deptMenu);
+    deptDropdown.classList.toggle('open', willOpen);
+  });
+
+  deptMenu.querySelectorAll('.dept-option').forEach(option => {
+    option.addEventListener('click', () => {
+      deptSelected.textContent = option.dataset.value;
+      deptCardValue.textContent = option.dataset.count;
+      deptDropdown.classList.remove('open');
+    });
+  });
+
+  // ---------- Dropdowns de filtro (Departamento, Status, Salario) ----------
+  function setupFilterDropdown(dropdownId, btnId, menuId, selectedId, onSelect){
+    const dropdown = document.getElementById(dropdownId);
+    const btn = document.getElementById(btnId);
+    const menu = document.getElementById(menuId);
+    const selectedLabel = document.getElementById(selectedId);
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = !dropdown.classList.contains('open');
+      closeAllDropdowns(dropdown);
+      if (willOpen) positionFixedMenu(btn, menu);
+      dropdown.classList.toggle('open', willOpen);
+    });
+
+    menu.querySelectorAll('.filter-option').forEach(option => {
+      option.addEventListener('click', () => {
+        menu.querySelectorAll('.filter-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        selectedLabel.textContent = option.textContent;
+        dropdown.classList.remove('open');
+        if (onSelect) onSelect(option.dataset.value);
+      });
+    });
+
+    return { dropdown, btn, menu };
+  }
+
+  let activeFilters = { departamento: null, status: 'Todos', salario: 'Todos' };
+
+  setupFilterDropdown('filter-dept-dropdown', 'filter-dept-btn', 'filter-dept-menu', 'filter-dept-selected', (val) => {
+    activeFilters.departamento = val;
+    currentPage = 1;
+    renderTable();
+  });
+
+  setupFilterDropdown('filter-status-dropdown', 'filter-status-btn', 'filter-status-menu', 'filter-status-selected', (val) => {
+    activeFilters.status = val;
+    currentPage = 1;
+    renderTable();
+  });
+
+  setupFilterDropdown('filter-salario-dropdown', 'filter-salario-btn', 'filter-salario-menu', 'filter-salario-selected', (val) => {
+    activeFilters.salario = val;
+    currentPage = 1;
+    renderTable();
+  });
+
+  document.addEventListener('click', () => closeAllDropdowns());
+
+  window.addEventListener('scroll', () => {
+    document.querySelectorAll('.dept-dropdown.open, .filter-dropdown.open').forEach(el => {
+      const btn = el.querySelector('.dept-dropdown-btn, .filter-select-btn');
+      const menu = el.querySelector('.dept-menu, .filter-menu');
+      if (btn && menu) positionFixedMenu(btn, menu);
+    });
+  }, true);
+
+  // ---------- Dados dos candidatos ----------
+  let candidates = [
+    { id: 1, nome: 'Roberto Dantas', email: 'roberto.dantas@outlook.com', telefone: '(11) 95678-9877', cargo: 'Faxineiro', departamento: 'Limpeza e Zelo', salario: 2000, cidade: 'Limeira-SP', status: 'approved' },
+    { id: 2, nome: 'Camila Ferreira', email: 'camila.ferreira@gmail.com', telefone: '(11) 98123-4567', cargo: 'Analista de RH', departamento: 'Recursos Humanos', salario: 4200, cidade: 'São Paulo-SP', status: 'pending' },
+    { id: 3, nome: 'Lucas Almeida', email: 'lucas.almeida@hotmail.com', telefone: '(21) 99876-5432', cargo: 'Desenvolvedor Front-end', departamento: 'Transformação Digital', salario: 7500, cidade: 'Rio de Janeiro-RJ', status: 'rejected' },
+    { id: 4, nome: 'Bianca Souza', email: 'bianca.souza@outlook.com', telefone: '(31) 97654-3210', cargo: 'Analista Financeiro', departamento: 'Financeiro', salario: 5100, cidade: 'Belo Horizonte-MG', status: 'approved' },
+    { id: 5, nome: 'Thiago Martins', email: 'thiago.martins@gmail.com', telefone: '(41) 96543-2198', cargo: 'Consultor Comercial', departamento: 'Comercial', salario: 3800, cidade: 'Curitiba-PR', status: 'approved' }
+  ];
+  let nextId = 6;
+
+  // Candidatos extras de exemplo, so pra demonstrar a paginacao funcionando com uma base maior
+  (function gerarCandidatosDemo(){
+    const nomes = ['Ana', 'Bruno', 'Carla', 'Diego', 'Elaine', 'Fabio', 'Gisele', 'Hugo', 'Isabela', 'Joao', 'Karina', 'Leonardo', 'Marina', 'Nicolas', 'Otavio', 'Patricia', 'Rafael', 'Sabrina', 'Tomas', 'Vanessa'];
+    const sobrenomes = ['Silva', 'Souza', 'Oliveira', 'Costa', 'Pereira', 'Rodrigues', 'Almeida', 'Nascimento', 'Lima', 'Araujo'];
+    const cargos = ['Analista de RH', 'Desenvolvedor Front-end', 'Consultor Comercial', 'Analista Financeiro', 'Faxineiro', 'Assistente Administrativo', 'Designer UX/UI'];
+    const departamentos = ['Limpeza e Zelo', 'Recursos Humanos', 'Transformação Digital', 'Financeiro', 'Comercial'];
+    const cidades = ['São Paulo-SP', 'Rio de Janeiro-RJ', 'Belo Horizonte-MG', 'Curitiba-PR', 'Limeira-SP', 'Campinas-SP', 'Porto Alegre-RS'];
+    const statusList = ['approved', 'pending', 'rejected'];
+
+    for (let i = 0; i < 65; i++){
+      const nome = nomes[i % nomes.length] + ' ' + sobrenomes[(i * 3) % sobrenomes.length];
+      candidates.push({
+        id: nextId++,
+        nome,
+        email: nome.toLowerCase().replace(/\s+/g, '.') + '@email.com',
+        telefone: '(11) 9' + (1000 + i) + '-' + (2000 + i),
+        cargo: cargos[i % cargos.length],
+        departamento: departamentos[i % departamentos.length],
+        salario: 1500 + (i % 10) * 700,
+        cidade: cidades[i % cidades.length],
+        status: statusList[i % statusList.length]
+      });
+    }
+  })();
+
+  const statusLabels = { approved: 'Aprovado', pending: 'Em análise', rejected: 'Reprovado' };
+  const statusToFilterLabel = { approved: 'Aprovado', pending: 'Em análise', rejected: 'Reprovado' };
+
+  function formatSalario(valor){
+    return 'R$' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  }
+
+  function matchesFilters(c){
+    if (activeFilters.departamento && c.departamento !== activeFilters.departamento) return false;
+    if (activeFilters.status !== 'Todos' && statusToFilterLabel[c.status] !== activeFilters.status) return false;
+    if (activeFilters.salario !== 'Todos') {
+      const [min, max] = activeFilters.salario.split('-').map(Number);
+      if (c.salario < min || c.salario > max) return false;
+    }
+    const term = searchInput.value.trim().toLowerCase();
+    if (term && !c.nome.toLowerCase().includes(term) && !c.email.toLowerCase().includes(term)) return false;
+    return true;
+  }
+
+  const tbody = document.getElementById('candidates-table-body');
+  const paginationInfo = document.getElementById('pagination-info');
+  const paginationControls = document.getElementById('pagination-controls');
+  const pageSizeSelect = document.getElementById('page-size-select');
+
+  // ---------- Paginacao ----------
+  let currentPage = 1;
+  let pageSize = 20;
+
+  function renderPagination(totalItems){
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const start = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+    const end = Math.min(currentPage * pageSize, totalItems);
+    paginationInfo.textContent = `Mostrando ${start}-${end} de ${totalItems} candidatos`;
+
+    let buttonsHtml = '';
+
+    buttonsHtml += `<button class="page-btn" type="button" data-page="prev" ${currentPage === 1 ? 'disabled' : ''}>
+      <iconify-icon icon="solar:alt-arrow-left-bold"></iconify-icon>
+    </button>`;
+
+    const pagesToShow = new Set();
+    pagesToShow.add(1);
+    pagesToShow.add(totalPages);
+    for (let p = currentPage - 1; p <= currentPage + 1; p++){
+      if (p >= 1 && p <= totalPages) pagesToShow.add(p);
+    }
+
+    const sortedPages = Array.from(pagesToShow).sort((a, b) => a - b);
+    let lastPage = 0;
+    sortedPages.forEach(p => {
+      if (lastPage && p - lastPage > 1) {
+        buttonsHtml += `<span class="page-ellipsis">…</span>`;
+      }
+      buttonsHtml += `<button class="page-btn ${p === currentPage ? 'active' : ''}" type="button" data-page="${p}">${p}</button>`;
+      lastPage = p;
+    });
+
+    buttonsHtml += `<button class="page-btn" type="button" data-page="next" ${currentPage === totalPages ? 'disabled' : ''}>
+      <iconify-icon icon="solar:alt-arrow-right-bold"></iconify-icon>
+    </button>`;
+
+    paginationControls.innerHTML = buttonsHtml;
+
+    paginationControls.querySelectorAll('.page-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.page;
+        if (target === 'prev') currentPage = Math.max(1, currentPage - 1);
+        else if (target === 'next') currentPage = Math.min(totalPages, currentPage + 1);
+        else currentPage = Number(target);
+        renderTable();
+      });
+    });
+  }
+
+  function renderTable(){
+    const filtered = candidates.filter(matchesFilters);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const pageItems = filtered.slice(startIndex, startIndex + pageSize);
+
+    tbody.innerHTML = pageItems.map(c => `
+      <tr>
+        <td>${c.nome}</td>
+        <td>${c.email}</td>
+        <td>${c.telefone}</td>
+        <td>${c.cargo}</td>
+        <td>${c.departamento}</td>
+        <td>${formatSalario(c.salario)}</td>
+        <td>${c.cidade}</td>
+        <td class="col-status"><span class="status-pill ${c.status}">${statusLabels[c.status]}</span></td>
+        <td class="col-actions">
+          <div class="action-buttons">
+            <button class="action-btn edit" type="button" data-id="${c.id}" title="Editar">
+              <iconify-icon icon="solar:pen-2-bold"></iconify-icon>
+            </button>
+            <button class="action-btn delete" type="button" data-id="${c.id}" title="Excluir">
+              <iconify-icon icon="solar:trash-bin-trash-bold"></iconify-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('') || `<tr><td colspan="9" style="text-align:center; color:var(--subtitle); padding: 40px;">Nenhum candidato encontrado.</td></tr>`;
+
+    tbody.querySelectorAll('.action-btn.delete').forEach(btn => {
+      btn.addEventListener('click', () => openDeleteModal(Number(btn.dataset.id)));
+    });
+
+    tbody.querySelectorAll('.action-btn.edit').forEach(btn => {
+      btn.addEventListener('click', () => openEditModal(Number(btn.dataset.id)));
+    });
+
+    renderPagination(filtered.length);
+  }
+
+  pageSizeSelect.addEventListener('change', () => {
+    pageSize = Number(pageSizeSelect.value);
+    currentPage = 1;
+    renderTable();
+  });
+
+  const searchInput = document.getElementById('search-input');
+  searchInput.addEventListener('input', () => {
+    currentPage = 1;
+    renderTable();
+  });
+
+  // ---------- Modal: Excluir candidato ----------
+  const deleteModalOverlay = document.getElementById('delete-modal-overlay');
+  const deleteCandidateName = document.getElementById('delete-candidate-name');
+  const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+  const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+  let candidateIdToDelete = null;
+
+  function openDeleteModal(id){
+    const candidate = candidates.find(c => c.id === id);
+    if (!candidate) return;
+    candidateIdToDelete = id;
+    deleteCandidateName.textContent = candidate.nome;
+    deleteModalOverlay.classList.add('open');
+  }
+
+  function closeDeleteModal(){
+    deleteModalOverlay.classList.remove('open');
+    candidateIdToDelete = null;
+  }
+
+  cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+  deleteModalOverlay.addEventListener('click', (e) => {
+    if (e.target === deleteModalOverlay) closeDeleteModal();
+  });
+
+  confirmDeleteBtn.addEventListener('click', () => {
+    if (candidateIdToDelete !== null) {
+      candidates = candidates.filter(c => c.id !== candidateIdToDelete);
+      renderTable();
+    }
+    closeDeleteModal();
+  });
+
+  // ---------- Modal: Cadastrar / Editar candidato ----------
+  const addModalOverlay = document.getElementById('add-modal-overlay');
+  const openAddModalBtn = document.getElementById('open-add-modal-btn');
+  const closeAddModalBtn = document.getElementById('close-add-modal-btn');
+  const cancelAddBtn = document.getElementById('cancel-add-btn');
+  const addForm = document.getElementById('add-candidate-form');
+  const formTitle = addModalOverlay.querySelector('.form-modal-header h3');
+  const formSubtitle = addModalOverlay.querySelector('.form-modal-box > p');
+  const submitBtn = addForm.querySelector('.confirm-save');
+  let editingId = null;
+
+  function openAddModal(){
+    editingId = null;
+    addForm.reset();
+    formTitle.textContent = 'Cadastrar candidato';
+    formSubtitle.textContent = 'Preencha os dados abaixo para adicionar um novo candidato';
+    submitBtn.textContent = 'Cadastrar';
+    addModalOverlay.classList.add('open');
+  }
+
+  function openEditModal(id){
+    const c = candidates.find(cand => cand.id === id);
+    if (!c) return;
+    editingId = id;
+    document.getElementById('add-nome').value = c.nome;
+    document.getElementById('add-email').value = c.email;
+    document.getElementById('add-telefone').value = c.telefone;
+    document.getElementById('add-cargo').value = c.cargo;
+    document.getElementById('add-departamento').value = c.departamento;
+    document.getElementById('add-salario').value = formatSalario(c.salario);
+    document.getElementById('add-cidade').value = c.cidade;
+    document.getElementById('add-status').value = c.status;
+    formTitle.textContent = 'Editar candidato';
+    formSubtitle.textContent = 'Atualize os dados do candidato abaixo';
+    submitBtn.textContent = 'Salvar alterações';
+    addModalOverlay.classList.add('open');
+  }
+
+  function closeAddModal(){
+    addModalOverlay.classList.remove('open');
+    editingId = null;
+  }
+
+  openAddModalBtn.addEventListener('click', openAddModal);
+  closeAddModalBtn.addEventListener('click', closeAddModal);
+  cancelAddBtn.addEventListener('click', closeAddModal);
+  addModalOverlay.addEventListener('click', (e) => {
+    if (e.target === addModalOverlay) closeAddModal();
+  });
+
+  addForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const salarioRaw = document.getElementById('add-salario').value
+      .replace(/[^\d,]/g, '')
+      .replace(',', '.');
+    const novoCandidato = {
+      nome: document.getElementById('add-nome').value.trim(),
+      email: document.getElementById('add-email').value.trim(),
+      telefone: document.getElementById('add-telefone').value.trim(),
+      cargo: document.getElementById('add-cargo').value.trim(),
+      departamento: document.getElementById('add-departamento').value,
+      salario: parseFloat(salarioRaw) || 0,
+      cidade: document.getElementById('add-cidade').value.trim(),
+      status: document.getElementById('add-status').value
+    };
+
+    if (editingId !== null) {
+      const idx = candidates.findIndex(c => c.id === editingId);
+      if (idx !== -1) candidates[idx] = { ...candidates[idx], ...novoCandidato };
+    } else {
+      candidates.push({ id: nextId++, ...novoCandidato });
+      currentPage = Math.ceil(candidates.filter(matchesFilters).length / pageSize);
+    }
+
+    renderTable();
+    closeAddModal();
+  });
+
+  // ---------- Init ----------
+  renderTable();
+</script>
+
+</body>
+</html>
