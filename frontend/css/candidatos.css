@@ -501,6 +501,21 @@
     color: #0B2E7A;
   }
 
+    select.status-pill{
+    border: none;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-family: inherit;
+  }
+
+  select.status-pill option{
+    background: #fff;
+    color: #333;
+  }
+
   .action-buttons{
     display: flex;
     align-items: center;
