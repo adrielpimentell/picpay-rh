@@ -1,8 +1,12 @@
 package com.picpay.rh.service;
 
-import java.util.List;
-import java.util.ArrayList;
+import com.picpay.rh.model.Funcionario;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class FuncionarioService {
@@ -10,8 +14,10 @@ public class FuncionarioService {
     private final AtomicLong proximoId = new AtomicLong(1);
 
     public FuncionarioService() {
-        funcionarios.add(new Funcionario(proximoId.getAndIncremente(), "Adriel Pimentel, adriel.pimentel@picpay.com", "11979678570", "CTO", "Tecnologia", 50000.0, "São Paulo", "EM_ANALISE"));
-        funcionarios.add(new Funcionario(proximoId.getAndIncremente(), "Pedro Sena", "pedro.sena@picpay.com", "11246976924", "Estágiario", "Tecnologia", 1064.0, "São Paulo", "APROVADO"));
+        funcionarios.add(new Funcionario(proximoId.getAndIncrement(), "Adriel Pimentel", "adriel.pimentel@picpay.com",
+                "11979678570", "CTO", "Tecnologia", 50000.0, "São Paulo", "EM_ANALISE"));
+        funcionarios.add(new Funcionario(proximoId.getAndIncrement(), "Pedro Sena", "pedro.sena@picpay.com",
+                "11246976924", "Estagiário", "Tecnologia", 1064.0, "São Paulo", "APROVADO"));
     }
 
     public List<Funcionario> listarTodos() {
@@ -25,7 +31,7 @@ public class FuncionarioService {
     }
 
     public Funcionario cadastrar(Funcionario funcionario) {
-        funcionario.setId(proximoId.getAndIncremente());
+        funcionario.setId(proximoId.getAndIncrement());
         if (funcionario.getStatus() == null) {
             funcionario.setStatus("EM_ANALISE");
         }
@@ -57,7 +63,7 @@ public class FuncionarioService {
             if (dadosParciais.getSalario() != null) funcionario.setSalario(dadosParciais.getSalario());
             if (dadosParciais.getCidade() != null) funcionario.setCidade(dadosParciais.getCidade());
             if (dadosParciais.getStatus() != null) funcionario.setStatus(dadosParciais.getStatus());
-            return funcionario; 
+            return funcionario;
         });
     }
 
