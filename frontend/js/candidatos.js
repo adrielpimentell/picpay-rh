@@ -21,6 +21,10 @@
     window.location.href = 'candidatos.html';
   });
 
+  document.querySelector('.logout-btn').addEventListener('click', () => {
+    window.location.href = '../index.html';
+  });
+
  // ---------- Dropdown: Candidatos por departamento (card) ----------
   const deptDropdown = document.getElementById('dept-dropdown');
   const deptBtn = document.getElementById('dept-dropdown-btn');

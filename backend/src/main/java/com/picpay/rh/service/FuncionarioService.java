@@ -15,9 +15,9 @@ public class FuncionarioService {
 
     public FuncionarioService() {
         funcionarios.add(new Funcionario(proximoId.getAndIncrement(), "Adriel Pimentel", "adriel.pimentel@picpay.com",
-                "11979678570", "CTO", "Tecnologia", 50000.0, "São Paulo", "EM_ANALISE"));
+                "11979678570", "CTO", "Transformação Digital", 50000.0, "São Paulo", "EM_ANALISE"));
         funcionarios.add(new Funcionario(proximoId.getAndIncrement(), "Pedro Sena", "pedro.sena@picpay.com",
-                "11246976924", "Estagiário", "Tecnologia", 1064.0, "São Paulo", "APROVADO"));
+                "11246976924", "Estagiário", "Transformação Digital", 1064.0, "São Paulo", "APROVADO"));
     }
 
     public List<Funcionario> listarTodos() {
