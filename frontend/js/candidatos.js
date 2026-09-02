@@ -13,6 +13,14 @@
     hired: 'CONTRATADO'
   };
  
+    // ---------- Navegação entre telas ----------
+  document.getElementById('tab-visao-geral').addEventListener('click', () => {
+    window.location.href = 'home.html';
+  });
+  document.getElementById('tab-candidatos').addEventListener('click', () => {
+    window.location.href = 'candidatos.html';
+  });
+
  // ---------- Dropdown: Candidatos por departamento (card) ----------
   const deptDropdown = document.getElementById('dept-dropdown');
   const deptBtn = document.getElementById('dept-dropdown-btn');
@@ -126,12 +134,48 @@
     };
   }
 
+  const totalValueEl = document.getElementById('total-candidatos-value');
+  const aprovadosValueEl = document.getElementById('aprovados-value');
+  const pendentesValueEl = document.getElementById('pendentes-value');
+  const reprovadosValueEl = document.getElementById('reprovados-value');
+
+  function atualizarIndicadores(lista) {
+    totalValueEl.textContent = lista.length;
+    aprovadosValueEl.textContent = lista.filter(c => c.status === 'approved' || c.status === 'hired').length;
+    pendentesValueEl.textContent = lista.filter(c => c.status === 'pending').length;
+    reprovadosValueEl.textContent = lista.filter(c => c.status === 'rejected').length;
+
+    const contagemPorDepto = {};
+    lista.forEach(c => {
+      contagemPorDepto[c.departamento] = (contagemPorDepto[c.departamento] || 0) + 1;
+    });
+
+    const departamentos = Object.keys(contagemPorDepto);
+    deptMenu.innerHTML = departamentos.map(dep => `
+      <button class="dept-option" type="button" data-value="${dep}" data-count="${contagemPorDepto[dep]}">${dep}</button>
+    `).join('');
+
+    deptMenu.querySelectorAll('.dept-option').forEach(option => {
+      option.addEventListener('click', () => {
+        deptSelected.textContent = option.dataset.value;
+        deptCardValue.textContent = option.dataset.count;
+        deptDropdown.classList.remove('open');
+      });
+    });
+
+    if (departamentos.length > 0) {
+      deptSelected.textContent = departamentos[0];
+      deptCardValue.textContent = contagemPorDepto[departamentos[0]];
+    }
+  }
+
   async function carregarCandidatos() {
     try {
       const resposta = await fetch(API_URL);
       if (!resposta.ok) throw new Error('Erro ao buscar funcionários');
       const dados = await resposta.json();
       candidates = dados.map(converterDaApi);
+      atualizarIndicadores(candidates);
       renderTable();
     } catch (erro) {
       console.error(erro);
@@ -300,6 +344,7 @@
         const resposta = await fetch(`${API_URL}/${candidateIdToDelete}`, { method: 'DELETE' });
         if (!resposta.ok) throw new Error('Erro ao excluir');
         candidates = candidates.filter(c => c.id !== candidateIdToDelete);
+        atualizarIndicadores(candidates);
         renderTable();
       } catch (erro) {
         console.error(erro);

@@ -1,0 +1,16 @@
+[33m0f57560[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeat/frontend-api-integration[m[33m)[m feat: connect frontend to backend API via fetch
+[33md713f1e[m feat: connect frontend to backend API via fetch
+[33m0cc285d[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #5 from adrielpimentell/front
+[33m01a1ea0[m[33m ([m[1;31morigin/front[m[33m)[m fix/separating css, html and js in 3 files, instead of 1
+[33m6611204[m Merge pull request #4 from adrielpimentell/front
+[33m0e1dbc4[m feat/adding candidates screen
+[33m7e5a483[m Merge pull request #3 from adrielpimentell/feat/employee-crud-api
+[33m6abfae2[m[33m ([m[1;31morigin/feat/employee-crud-api[m[33m)[m feat/add the employee controller file and fix minor errors
+[33mbd8ce86[m Merge branch 'main' of https://github.com/adrielpimentell/picpay-rh into feat/employee-crud-api
+[33mdf004be[m feat/add service and employee model
+[33m8b9facb[m Merge pull request #2 from adrielpimentell/front
+[33m989ca49[m feat/adding overview screen
+[33mec9def8[m Merge pull request #1 from adrielpimentell/front
+[33mc36074d[m feat/adding-login-screen with js
+[33m135bee0[m feat/adds the initial project structure
+[33mccfc3a9[m Initial commit
