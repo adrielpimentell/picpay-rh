@@ -18,6 +18,10 @@ function formatSalario(valor) {
   return 'R$' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 }
 
+document.querySelector('.logout-btn').addEventListener('click', () => {
+  window.location.href = '../index.html';
+});
+
 // Dropdown de departamentos
 const deptDropdown = document.getElementById('dept-dropdown');
 const deptBtn = document.getElementById('dept-dropdown-btn');

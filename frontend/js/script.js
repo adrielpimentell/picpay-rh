@@ -78,6 +78,11 @@
     toggleBtn.setAttribute('aria-label', isVisible ? 'Mostrar senha' : 'Ocultar senha');
   });
 
+  const CREDENCIAIS_VALIDAS = {
+    email: 'lirio.perfeito@picpay.com',
+    senha: 'LirioPerfeito24+'
+  };
+
   document.getElementById('login-form').addEventListener('submit', (e) => {
     e.preventDefault();
     clearTimeout(emailTimer);
@@ -85,9 +90,16 @@
     validateEmail();
     validatePassword();
     updateSubmitState();
-    if(submitBtn.disabled) return;
-    // Aqui entraria a chamada de autenticação real
-    console.log('Login enviado:', {
-      email: emailInput.value
-    });
+    if (submitBtn.disabled) return;
+
+    const loginError = document.getElementById('login-error');
+    const emailCorreto = emailInput.value.trim() === CREDENCIAIS_VALIDAS.email;
+    const senhaCorreta = passwordInput.value === CREDENCIAIS_VALIDAS.senha;
+
+    if (emailCorreto && senhaCorreta) {
+      loginError.style.display = 'none';
+      window.location.href = 'static/home.html';
+    } else {
+      loginError.style.display = 'block';
+    }
   });
