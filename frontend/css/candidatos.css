@@ -496,6 +496,11 @@
     color: var(--status-rejected-text);
   }
 
+  .status-pill.hired{
+    background: #A4C8FF;
+    color: #0B2E7A;
+  }
+
   .action-buttons{
     display: flex;
     align-items: center;
