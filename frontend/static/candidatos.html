@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PicPay RH - Candidatos</title>
+<title>PicPay | RH - Candidatos</title>
 <link rel="icon" href="../assets/picpay-logo.ico">
 <link rel="stylesheet" href="../css/candidatos.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
 <style>
- 
+
 </style>
 </head>
 <body>
@@ -23,8 +23,8 @@
 
   <div class="header-right-group">
     <nav class="nav-tabs">
-      <button class="nav-tab" type="button">Visão Geral</button>
-      <button class="nav-tab active" type="button">Candidatos</button>
+      <button class="nav-tab" type="button" id="tab-visao-geral">Visão Geral</button>
+      <button class="nav-tab active" type="button" id="tab-candidatos">Candidatos</button>
     </nav>
 
     <button class="logout-btn" type="button">
@@ -46,7 +46,7 @@
         <iconify-icon icon="fa7-solid:people-group"></iconify-icon>
         Total de candidatos
       </div>
-      <div class="card-value">343</div>
+      <div class="card-value" id="total-candidatos-value">343</div>
     </div>
 
     <div class="summary-card">
@@ -75,7 +75,7 @@
         <iconify-icon icon="akar-icons:circle-check-fill"></iconify-icon>
         Aprovados
       </div>
-      <div class="card-value">198</div>
+      <div class="card-value" id="aprovados-value">198</div>
     </div>
 
     <div class="summary-card">
@@ -83,7 +83,7 @@
         <iconify-icon icon="mdi:book-clock"></iconify-icon>
         Em análise
       </div>
-      <div class="card-value">98</div>
+      <div class="card-value" id="pendentes-value">98</div>
     </div>
 
     <div class="summary-card">
@@ -91,7 +91,7 @@
         <iconify-icon icon="fluent-mdl2:status-error-full"></iconify-icon>
         Reprovados
       </div>
-      <div class="card-value">47</div>
+      <div class="card-value" id="reprovados-value">47</div>
     </div>
   </div>
 </main>

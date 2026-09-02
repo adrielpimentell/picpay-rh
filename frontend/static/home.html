@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PicPay RH - Visão Geral</title>
+<title>PicPay | RH - Visão Geral</title>
 <link rel="icon" href="../assets/picpay-logo.ico">
 <link rel="stylesheet" href="../css/home.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,16 +17,17 @@
       <img src="../assets/picpay-rh-logo.png" alt="Logo do PicPay" class="logo-image">
   </div>
 
-  <div class="header-right-group">
+   <div class="header-right-group">
     <nav class="nav-tabs">
-      <button class="nav-tab active" type="button">Visão Geral</button>
-      <button class="nav-tab" type="button">Candidatos</button>
+      <button class="nav-tab active" type="button" id="tab-visao-geral">Visão Geral</button>
+      <button class="nav-tab" type="button" id="tab-candidatos">Candidatos</button>
     </nav>
 
     <button class="logout-btn" type="button">
       <iconify-icon icon="solar:logout-2-bold"></iconify-icon>
       Sair
     </button>
+  </div>
   </div>
 </header>
 
@@ -43,7 +44,7 @@
         <iconify-icon icon="fa7-solid:people-group"></iconify-icon>
         Total de candidatos
       </div>
-      <div class="card-value">343</div>
+      <div class="card-value" id="total-candidatos-value">0</div>
     </div>
 
     <div class="summary-card dept-card">
@@ -77,7 +78,7 @@
 <section class="table-section">
   <div class="table-section-header">
     <h2>Últimos registros de Candidatos</h2>
-    <button class="view-all-btn" type="button">
+    <button class="view-all-btn" type="button" id="view-all-btn">
       Ver tabela completa
       <iconify-icon icon="akar-icons:arrow-right"></iconify-icon>
     </button>
