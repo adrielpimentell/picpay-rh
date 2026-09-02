@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PicPay RH - Visão Geral</title>
+<link rel="icon" href="assets/picpay-logo.ico">
+<link rel="stylesheet" href="css/home.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+</head>
+<body>
+<header class="header">
+  <div class="header-left">
+      <img src="assets/picpay-rh-logo.png" alt="Logo do PicPay" class="logo-image">
+  </div>
+
+  <div class="header-right-group">
+    <nav class="nav-tabs">
+      <button class="nav-tab active" type="button">Visão Geral</button>
+      <button class="nav-tab" type="button">Candidatos</button>
+    </nav>
+
+    <button class="logout-btn" type="button">
+      <iconify-icon icon="solar:logout-2-bold"></iconify-icon>
+      Sair
+    </button>
+  </div>
+</header>
+
+<main class="content">
+  <div class="welcome">
+    <h1>Bem vindo de volta, LP!</h1>
+    <p>Aqui estão as últimas atualizações das inscrições para novas contratações.</p>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-cards-group">
+    <div class="summary-card">
+      <div class="card-label">
+        <iconify-icon icon="fa7-solid:people-group"></iconify-icon>
+        Total de candidatos
+      </div>
+      <div class="card-value">343</div>
+    </div>
+
+    <div class="summary-card dept-card">
+      <div class="card-label">
+        <iconify-icon icon="solar:widget-4-bold"></iconify-icon>
+        Candidatos por departamento
+      </div>
+      <div class="card-value">42</div>
+      <div class="dept-dropdown" id="dept-dropdown">
+        <button class="dept-dropdown-btn" type="button" id="dept-dropdown-btn">
+          <span id="dept-selected">Transformação Digital</span>
+          <iconify-icon icon="solar:alt-arrow-down-bold"></iconify-icon>
+        </button>
+        <div class="dept-menu" id="dept-menu">
+          <button class="dept-option" type="button" data-value="Transformação Digital" data-count="42">Transformação Digital</button>
+          <button class="dept-option" type="button" data-value="Limpeza e Zelo" data-count="58">Limpeza e Zelo</button>
+          <button class="dept-option" type="button" data-value="Financeiro" data-count="27">Financeiro</button>
+          <button class="dept-option" type="button" data-value="Recursos Humanos" data-count="15">Recursos Humanos</button>
+          <button class="dept-option" type="button" data-value="Comercial" data-count="63">Comercial</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="promo-banner">
+        <img src="assets/picpay-comercial.png" alt="Promoção de contratação de novos talentos" class="promo-image">
+    </div>
+  </div>
+</main>
+
+<section class="table-section">
+  <div class="table-section-header">
+    <h2>Últimos registros de Candidatos</h2>
+    <button class="view-all-btn" type="button">
+      Ver tabela completa
+      <iconify-icon icon="akar-icons:arrow-right"></iconify-icon>
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Cargo</th>
+          <th>Departamento</th>
+          <th>Salário</th>
+          <th>Cidade</th>
+          <th class="col-status">Status</th>
+        </tr>
+      </thead>
+      <tbody id="candidates-table-body">
+      </tbody>
+    </table>
+  </div>
+</section>
+</body>
+<script src="js/home.js"></script>
+</html>
