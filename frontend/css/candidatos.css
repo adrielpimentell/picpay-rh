@@ -1,4 +1,4 @@
- :root{
+:root{
     --green: #00BC54;
     --green-dark: #00A248;
     --table-header: #33C976;
@@ -136,6 +136,7 @@
     align-items: stretch;
     gap: 24px;
     margin-bottom: 40px;
+    padding-bottom: 16px;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -237,6 +238,10 @@
 
   .dept-option:hover{
     background: var(--row-alt);
+  }
+
+  .dept-option.active{
+    color: var(--green-dark);
   }
 
   /* TOOLBAR SECTION */
@@ -839,6 +844,21 @@
   .form-field input::placeholder{
     color: var(--subtitle);
     font-weight: 600;
+  }
+
+  .form-field.has-error input{
+    border-color: #E5484D;
+  }
+
+  .form-field .field-error-msg{
+    display: none;
+    font-size: 12px;
+    font-weight: 600;
+    color: #E5484D;
+  }
+
+  .form-field.has-error .field-error-msg{
+    display: block;
   }
 
   .form-modal-actions{

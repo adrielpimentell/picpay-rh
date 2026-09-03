@@ -1,4 +1,4 @@
- :root{
+:root{
     --green: #00BC54;
     --green-dark: #00A248;
     --table-header: #33C976;
@@ -243,6 +243,10 @@
     background: var(--row-alt);
   }
 
+  .dept-option.active{
+    color: var(--green-dark);
+  }
+
   .promo-banner{
     width: 354px;
     height: 343px;
@@ -392,6 +396,11 @@
   .status-pill.rejected{
     background: var(--status-rejected-bg);
     color: var(--status-rejected-text);
+  }
+
+   .status-pill.hired{
+    background: #A4C8FF;
+    color: #0B2E7A;
   }
 
   /* RESPONSIVE */
