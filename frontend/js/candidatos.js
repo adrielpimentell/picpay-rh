@@ -1,10 +1,23 @@
-  // Tradução entre os valores da API (backend) e os valores usados na interface
+// Tradução entre os valores da API (backend) e os valores usados na interface
   const statusApiParaUi = {
     EM_ANALISE: 'pending',
     APROVADO: 'approved',
     REPROVADO: 'rejected',
     CONTRATADO: 'hired'
   };
+
+  // ---------- Proteção de rota: só entra se estiver logado ----------
+  function verificarLogin(){
+    if (!sessionStorage.getItem('nomeUsuario')) {
+      window.location.replace('../index.html');
+    }
+  }
+  verificarLogin();
+
+  // Reforça a checagem quando a página volta pelo cache do navegador (botão "voltar")
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) verificarLogin();
+  });
 
   const statusUiParaApi = {
     pending: 'EM_ANALISE',
@@ -22,7 +35,8 @@
   });
 
   document.querySelector('.logout-btn').addEventListener('click', () => {
-    window.location.href = '../index.html';
+    sessionStorage.removeItem('nomeUsuario');
+    window.location.replace('../index.html');
   });
 
  // ---------- Dropdown: Candidatos por departamento (card) ----------
@@ -53,10 +67,16 @@
     deptDropdown.classList.toggle('open', willOpen);
   });
 
+  function setDeptOptionActive(selectedOption){
+    deptMenu.querySelectorAll('.dept-option').forEach(o => o.classList.remove('active'));
+    if (selectedOption) selectedOption.classList.add('active');
+  }
+
   deptMenu.querySelectorAll('.dept-option').forEach(option => {
     option.addEventListener('click', () => {
       deptSelected.textContent = option.dataset.value;
       deptCardValue.textContent = option.dataset.count;
+      setDeptOptionActive(option);
       deptDropdown.classList.remove('open');
     });
   });
@@ -92,7 +112,7 @@
   let activeFilters = { departamento: null, status: 'Todos', salario: 'Todos' };
 
   setupFilterDropdown('filter-dept-dropdown', 'filter-dept-btn', 'filter-dept-menu', 'filter-dept-selected', (val) => {
-    activeFilters.departamento = val;
+    activeFilters.departamento = val === 'Todos' ? null : val;
     currentPage = 1;
     renderTable();
   });
@@ -165,6 +185,7 @@
       option.addEventListener('click', () => {
         deptSelected.textContent = option.dataset.value;
         deptCardValue.textContent = option.dataset.count;
+        setDeptOptionActive(option);
         deptDropdown.classList.remove('open');
       });
     });
@@ -172,6 +193,7 @@
     if (departamentos.length > 0) {
       deptSelected.textContent = departamentos[0];
       deptCardValue.textContent = contagemPorDepto[departamentos[0]];
+      setDeptOptionActive(deptMenu.querySelector('.dept-option'));
     }
   }
 
@@ -196,6 +218,36 @@
     return 'R$' + valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
   }
 
+  function formatTelefone(valor){
+    const digitos = String(valor || '').replace(/\D/g, '').slice(0, 11);
+    if (digitos.length <= 10) {
+      // (11) 9999-9999
+      return digitos.replace(/^(\d{0,2})(\d{0,4})(\d{0,4}).*/, (m, ddd, p1, p2) => {
+        let out = '';
+        if (ddd) out += `(${ddd}` + (ddd.length === 2 ? ') ' : '');
+        out += p1;
+        if (p2) out += `-${p2}`;
+        return out;
+      });
+    }
+    // (11) 99999-9999
+    return digitos.replace(/^(\d{0,2})(\d{0,5})(\d{0,4}).*/, (m, ddd, p1, p2) => {
+      let out = '';
+      if (ddd) out += `(${ddd}` + (ddd.length === 2 ? ') ' : '');
+      out += p1;
+      if (p2) out += `-${p2}`;
+      return out;
+    });
+  }
+
+  function formatCidade(valor){
+    const match = String(valor || '').trim().match(/^(.+?)\s*[-/ ,]\s*([A-Za-zÀ-ÖØ-öø-ÿ]{2})$/);
+    if (!match) return String(valor || '').trim();
+    const cidade = match[1].trim();
+    const uf = match[2].toUpperCase();
+    return `${cidade}, ${uf}`;
+  }
+
   function matchesFilters(c){
     if (activeFilters.departamento && c.departamento !== activeFilters.departamento) return false;
     if (activeFilters.status !== 'Todos' && statusToFilterLabel[c.status] !== activeFilters.status) return false;
@@ -203,8 +255,16 @@
       const [min, max] = activeFilters.salario.split('-').map(Number);
       if (c.salario < min || c.salario > max) return false;
     }
-    const term = searchInput.value.trim().toLowerCase();
-    if (term && !c.nome.toLowerCase().includes(term) && !c.email.toLowerCase().includes(term) && !c.cargo.toLowerCase().includes(term)) return false;
+     const term = searchInput.value.trim().toLowerCase();
+    if (term) {
+      const statusLabel = (statusToFilterLabel[c.status] || '').toLowerCase();
+      const bateuBusca =
+        c.nome.toLowerCase().includes(term) ||
+        c.email.toLowerCase().includes(term) ||
+        c.cargo.toLowerCase().includes(term) ||
+        statusLabel.includes(term);
+      if (!bateuBusca) return false;
+    }
     return true;
   }
 
@@ -297,11 +357,11 @@
       <tr>
         <td>${c.nome}</td>
         <td>${c.email}</td>
-        <td>${c.telefone}</td>
+        <td>${formatTelefone(c.telefone)}</td>
         <td>${c.cargo}</td>
         <td>${c.departamento}</td>
         <td>${formatSalario(c.salario)}</td>
-        <td>${c.cidade}</td>
+        <td>${formatCidade(c.cidade)}</td>
         <td class="col-status">
           <select class="status-pill status-select ${c.status}" data-id="${c.id}">
             <option value="pending" ${c.status === 'pending' ? 'selected' : ''}>Em análise</option>
@@ -402,9 +462,15 @@
   const submitBtn = addForm.querySelector('.confirm-save');
   let editingId = null;
 
+  function limparErros(){
+    document.querySelectorAll('#add-candidate-form .form-field.has-error')
+      .forEach(field => field.classList.remove('has-error'));
+  }
+
   function openAddModal(){
     editingId = null;
     addForm.reset();
+    limparErros();
     formTitle.textContent = 'Cadastrar candidato';
     formSubtitle.textContent = 'Preencha os dados abaixo para adicionar um novo candidato';
     submitBtn.textContent = 'Cadastrar';
@@ -415,13 +481,14 @@
     const c = candidates.find(cand => cand.id === id);
     if (!c) return;
     editingId = id;
+    limparErros();
     document.getElementById('add-nome').value = c.nome;
     document.getElementById('add-email').value = c.email;
-    document.getElementById('add-telefone').value = c.telefone;
+    document.getElementById('add-telefone').value = formatTelefone(c.telefone);
     document.getElementById('add-cargo').value = c.cargo;
     document.getElementById('add-departamento').value = c.departamento;
     document.getElementById('add-salario').value = formatSalario(c.salario);
-    document.getElementById('add-cidade').value = c.cidade;
+    document.getElementById('add-cidade').value = formatCidade(c.cidade);
     document.getElementById('add-status').value = c.status;
     formTitle.textContent = 'Editar candidato';
     formSubtitle.textContent = 'Atualize os dados do candidato abaixo';
@@ -441,8 +508,60 @@
     if (e.target === addModalOverlay) closeAddModal();
   });
 
+  document.getElementById('add-telefone').addEventListener('input', (e) => {
+    e.target.value = formatTelefone(e.target.value);
+  });
+
+  // ---------- Validação: E-mail, Telefone e Cidade (Cidade-UF) ----------
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const telefoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+  const cidadeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' ]+\s*[-/ ,]\s*[A-Za-z]{2}$/;
+
+  const camposValidados = [
+    { id: 'add-email', regex: emailRegex },
+    { id: 'add-telefone', regex: telefoneRegex },
+    { id: 'add-cidade', regex: cidadeRegex }
+  ];
+
+  function validarCampo({ id, regex }){
+    const input = document.getElementById(id);
+    const field = input.closest('.form-field');
+    const valor = input.value.trim();
+    const valido = regex.test(valor);
+    field.classList.toggle('has-error', !valido);
+    return valido;
+  }
+
+  camposValidados.forEach(campo => {
+    const input = document.getElementById(campo.id);
+    input.addEventListener('input', () => {
+      input.closest('.form-field').classList.remove('has-error');
+    });
+    input.addEventListener('blur', () => {
+      if (input.value.trim() !== '') validarCampo(campo);
+    });
+  });
+
+  // Ao sair do campo Cidade, normaliza pro formato "Cidade,UF"
+  document.getElementById('add-cidade').addEventListener('blur', (e) => {
+    if (cidadeRegex.test(e.target.value.trim())) {
+      e.target.value = formatCidade(e.target.value);
+    }
+  });
+
+  function validarFormulario(){
+    let valido = true;
+    camposValidados.forEach(campo => {
+      if (!validarCampo(campo)) valido = false;
+    });
+    return valido;
+  }
+
     addForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    if (!validarFormulario()) return;
+
     const salarioRaw = document.getElementById('add-salario').value
       .replace(/[^\d,]/g, '')
       .replace(',', '.');
@@ -455,7 +574,7 @@
       cargo: document.getElementById('add-cargo').value.trim(),
       departamento: document.getElementById('add-departamento').value,
       salario: parseFloat(salarioRaw) || 0,
-      cidade: document.getElementById('add-cidade').value.trim(),
+      cidade: formatCidade(document.getElementById('add-cidade').value),
       status: statusUiParaApi[statusUi] || 'EM_ANALISE'
     };
 

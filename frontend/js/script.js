@@ -78,10 +78,10 @@
     toggleBtn.setAttribute('aria-label', isVisible ? 'Mostrar senha' : 'Ocultar senha');
   });
 
-  const CREDENCIAIS_VALIDAS = {
-    email: 'lirio.perfeito@picpay.com',
-    senha: 'LirioPerfeito24+'
-  };
+  const CONTAS_VALIDAS = [
+  { email: 'lirio.perfeito@picpay.com', senha: 'LirioPerfeito24+', nome: 'LP' },
+  { email: 'enzo.herrera@picpay.com', senha: 'TrS2026@', nome: 'TCP' },
+];
 
   document.getElementById('login-form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -93,11 +93,16 @@
     if (submitBtn.disabled) return;
 
     const loginError = document.getElementById('login-error');
-    const emailCorreto = emailInput.value.trim() === CREDENCIAIS_VALIDAS.email;
-    const senhaCorreta = passwordInput.value === CREDENCIAIS_VALIDAS.senha;
+    const emailDigitado = emailInput.value.trim();
+    const senhaDigitada = passwordInput.value;
 
-    if (emailCorreto && senhaCorreta) {
+    const contaEncontrada = CONTAS_VALIDAS.find(
+      conta => conta.email === emailDigitado && conta.senha === senhaDigitada
+    );
+
+    if (contaEncontrada) {
       loginError.style.display = 'none';
+      sessionStorage.setItem('nomeUsuario', contaEncontrada.nome);
       window.location.href = 'static/home.html';
     } else {
       loginError.style.display = 'block';

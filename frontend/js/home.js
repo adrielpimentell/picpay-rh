@@ -1,5 +1,18 @@
 const API_URL = 'http://localhost:8080/funcionarios';
 
+// ---------- Proteção de rota: só entra se estiver logado ----------
+function verificarLogin(){
+  if (!sessionStorage.getItem('nomeUsuario')) {
+    window.location.replace('../index.html');
+  }
+}
+verificarLogin();
+
+// Reforça a checagem quando a página volta pelo cache do navegador (botão "voltar")
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) verificarLogin();
+});
+
 const statusApiParaUi = {
   EM_ANALISE: 'pending',
   APROVADO: 'approved',
@@ -18,9 +31,45 @@ function formatSalario(valor) {
   return 'R$' + Number(valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 }
 
+function formatTelefone(valor){
+  const digitos = String(valor || '').replace(/\D/g, '').slice(0, 11);
+  if (digitos.length <= 10) {
+    return digitos.replace(/^(\d{0,2})(\d{0,4})(\d{0,4}).*/, (m, ddd, p1, p2) => {
+      let out = '';
+      if (ddd) out += `(${ddd}` + (ddd.length === 2 ? ') ' : '');
+      out += p1;
+      if (p2) out += `-${p2}`;
+      return out;
+    });
+  }
+  return digitos.replace(/^(\d{0,2})(\d{0,5})(\d{0,4}).*/, (m, ddd, p1, p2) => {
+    let out = '';
+    if (ddd) out += `(${ddd}` + (ddd.length === 2 ? ') ' : '');
+    out += p1;
+    if (p2) out += `-${p2}`;
+    return out;
+  });
+}
+
+function formatCidade(valor){
+  const match = String(valor || '').trim().match(/^(.+?)\s*[-/ ,]\s*([A-Za-zÀ-ÖØ-öø-ÿ]{2})$/);
+  if (!match) return String(valor || '').trim();
+  const cidade = match[1].trim();
+  const uf = match[2].toUpperCase();
+  return `${cidade}, ${uf}`;
+}
+
 document.querySelector('.logout-btn').addEventListener('click', () => {
-  window.location.href = '../index.html';
+  sessionStorage.removeItem('nomeUsuario');
+  window.location.replace('../index.html');
 });
+
+// Nome de quem logou (vindo do login) -> exibe no "Bem vindo de volta"
+const welcomeNameEl = document.getElementById('welcome-name');
+const nomeUsuario = sessionStorage.getItem('nomeUsuario');
+if (nomeUsuario) {
+  welcomeNameEl.textContent = nomeUsuario;
+}
 
 // Dropdown de departamentos
 const deptDropdown = document.getElementById('dept-dropdown');
@@ -37,6 +86,25 @@ deptBtn.addEventListener('click', (e) => {
 document.addEventListener('click', () => {
   deptDropdown.classList.remove('open');
 });
+
+function setDeptOptionActive(selectedOption){
+  deptMenu.querySelectorAll('.dept-option').forEach(o => o.classList.remove('active'));
+  if (selectedOption) selectedOption.classList.add('active');
+}
+
+function bindDeptOptions(){
+  deptMenu.querySelectorAll('.dept-option').forEach(option => {
+    option.addEventListener('click', () => {
+      deptSelected.textContent = option.dataset.value;
+      cardValue.textContent = option.dataset.count;
+      setDeptOptionActive(option);
+      deptDropdown.classList.remove('open');
+    });
+  });
+}
+
+// Liga os botões que já vêm prontos no HTML (funciona mesmo sem a API)
+bindDeptOptions();
 
 // Navegação entre telas
 document.getElementById('tab-candidatos').addEventListener('click', () => {
@@ -72,17 +140,12 @@ async function carregarIndicadores() {
       <button class="dept-option" type="button" data-value="${dep}" data-count="${contagemPorDepto[dep]}">${dep}</button>
     `).join('');
 
-    deptMenu.querySelectorAll('.dept-option').forEach(option => {
-      option.addEventListener('click', () => {
-        deptSelected.textContent = option.dataset.value;
-        cardValue.textContent = option.dataset.count;
-        deptDropdown.classList.remove('open');
-      });
-    });
+    bindDeptOptions();
 
     if (departamentos.length > 0) {
       deptSelected.textContent = departamentos[0];
       cardValue.textContent = contagemPorDepto[departamentos[0]];
+      setDeptOptionActive(deptMenu.querySelector('.dept-option'));
     }
 
     // Últimos registros (5 mais recentes, pelo maior id)
@@ -96,11 +159,11 @@ async function carregarIndicadores() {
         <tr>
           <td>${f.nome}</td>
           <td>${f.email}</td>
-          <td>${f.telefone}</td>
+          <td>${formatTelefone(f.telefone)}</td>
           <td>${f.cargo}</td>
           <td>${f.departamento}</td>
           <td>${formatSalario(f.salario)}</td>
-          <td>${f.cidade}</td>
+          <td>${formatCidade(f.cidade)}</td>
           <td class="col-status"><span class="status-pill ${statusUi}">${statusLabels[statusUi]}</span></td>
         </tr>
       `;
